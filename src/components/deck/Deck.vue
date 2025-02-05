@@ -45,7 +45,7 @@ const flipCard = (v: boolean) => {
         <div class="card-deck" v-if="remaining > 1">
           <Card :show-card="false" :allow-toggle="false" :card="null"/>
         </div>
-        <div class="top-card card-up" v-show="remaining > 0">
+        <div class="top-card card-up" v-show="remaining > 0" title="Click to draw">
           <Card :show-card="cardShow" :allow-toggle="true" :card="currentCard" @update:show-card="flipCard"/>
         </div>
       </div>
@@ -63,6 +63,7 @@ const flipCard = (v: boolean) => {
     position: absolute;
   }
   .top-card {
+    cursor: pointer;
     position: absolute;
     left: 15px;
     top: 5px;
