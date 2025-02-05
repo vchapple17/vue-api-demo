@@ -6,7 +6,7 @@ import FrontOfCard from "./components/FrontOfCard.vue";
 const props = defineProps<{
   allowToggle: boolean,
   showCard: boolean,
-  card: CardType|null,
+  card: CardType|null|undefined,
 }>()
 
 const emits = defineEmits(['update:showCard'])

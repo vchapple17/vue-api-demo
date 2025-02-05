@@ -13,7 +13,7 @@ const {initDeck, deckId, drawCard, remaining} = useDeckOfCards()
 
 const cardShow = ref(false)
 
-const currentCard: Ref<CardType|null> = ref()
+const currentCard: Ref<CardType|null|undefined> = ref(null)
 
 const resetDeck = async () => {
   await initDeck()
@@ -22,18 +22,19 @@ const resetDeck = async () => {
 
 onMounted(async () => {
   await initDeck()
-
 })
 
 const flipCard = (v: boolean) => {
   if (props.showFlip) {
     cardShow.value = v
   }
-  drawCard().then(c => {
-    currentCard.value = c
-    emit('cardDraw', c)
-  })
-  console.log(currentCard.value)
+  if (remaining.value > 0) {
+    drawCard().then(c => {
+      currentCard.value = c
+      emit('cardDraw', c)
+      console.log(currentCard.value)
+    })
+  }
 }
 </script>
 
@@ -41,10 +42,10 @@ const flipCard = (v: boolean) => {
   <div style="align-content: center;">
     <div style="position: relative;">
       <div v-if="deckId" class="deck-of-cards" :key="deckId">
-        <div class="card-deck">
+        <div class="card-deck" v-if="remaining > 1">
           <Card :show-card="false" :allow-toggle="false" :card="null"/>
         </div>
-        <div class="top-card card-up">
+        <div class="top-card card-up" v-show="remaining > 0">
           <Card :show-card="cardShow" :allow-toggle="true" :card="currentCard" @update:show-card="flipCard"/>
         </div>
       </div>
