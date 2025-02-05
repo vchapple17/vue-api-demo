@@ -1,4 +1,4 @@
-# APP Demo App
+# Vue / API Demo App
 
 
 ## Composition

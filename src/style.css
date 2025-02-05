@@ -60,9 +60,7 @@ button:focus-visible {
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
   text-align: center;
 }
 
@@ -81,9 +79,18 @@ button:focus-visible {
 
 
 /** Created by VC **/
+
+#app {
+  background-color: #007733;
+  color: #efefef;
+}
 .p-button {
   padding: 10px 5px;
   border: 1px #aaaaaa solid;
   background-color: #213547;
   color: #5a5a5a
+}
+
+.flex {
+  display: flex;
 }

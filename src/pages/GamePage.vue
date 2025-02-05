@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {computed, ref} from "vue";
+import RandomDrawGame from "./draw/RandomDrawGame.vue";
 import Select from "primevue/select";
 
 interface Game {
@@ -7,40 +9,56 @@ interface Game {
 }
 
 const GAMES: Array<Game> = [
-  {name: 'Draw', value: 'DRAW'},
-  // {name: 'War', value: 'WAR'}
+  {name: 'Random Draw', value: 'RandomDrawGame'},
 ];
 
-// defineProps<{ }>()
+const selectedGame = ref<string>('RandomDrawGame')
 
-const selectedGame = ref<string>('')
-
-import {ref} from "vue";
-import Deck from "../components/card-deck/Deck.vue";
+const selectedComponent = computed(() => {
+  switch (selectedGame.value) {
+    case 'RandomDrawGame': return RandomDrawGame
+  }
+  return null
+})
 </script>
 
 <template>
-
-  <div class="heading">
-    <h1>Select a card game:</h1>
-    <Select
-        v-model="selectedGame"
-        class="game-select"
-        :options="GAMES"
-        placeholder="Select a Game"
-        option-label="name"
-        option-value="value">
-    </Select>
+  <div class="game-container">
+    <div class="heading">
+      <h2>Select a card game:</h2>
+      <Select
+          v-model="selectedGame"
+          class="game-select"
+          :options="GAMES"
+          placeholder="Select a Game"
+          option-label="name"
+          option-value="value"
+      >
+      </Select>
+    </div>
+    <div class="playing-surface">
+      <component v-if="selectedComponent" :is="selectedComponent"/>
+    </div>
   </div>
-  <Deck></Deck>
-
 </template>
 
 <style scoped>
 .heading {
   position: relative;
+  height: 110px;
+}
+h2 {
+  margin-top: 0;
 }
 .game-select {
   width: 200px;
+}
+.game-container {
+  height: calc(100% - 20vh);
+}
+.playing-surface {
+  display: flex;
+  height: calc(100vh - 110px);
+  justify-content: center;
 }
 </style>

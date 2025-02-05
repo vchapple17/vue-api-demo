@@ -11,6 +11,7 @@ import GamePage from "./pages/GamePage.vue";
 <style scoped>
 .app-container {
   height: 100vh;
+  text-align: center
 }
 </style>
 
