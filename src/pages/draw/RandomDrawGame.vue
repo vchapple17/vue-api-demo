@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type {CardType} from "../../components/deck/composables/deckOfCards.ts";
+import {ref} from 'vue';
 import Deck from "../../components/deck/Deck.vue";
 import Pile from "../../components/pile/Pile.vue";
 
@@ -17,7 +18,7 @@ const currentCard: Ref<CardType|null> = ref()
 <template>
   <div class="random-draw-container">
     <div style="display: flex;">
-      <Deck :show-flip="false" @cardDraw="currentCard =$event"></Deck>
+      <Deck :show-flip="false" @cardDraw="currentCard =$event" @reset="currentCard = null"></Deck>
       <Pile :card="currentCard"/>
     </div>
   </div>

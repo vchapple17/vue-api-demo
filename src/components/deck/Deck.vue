@@ -7,6 +7,7 @@ import Button from 'primevue/button';
 import {useDeckOfCards} from "./composables/deckOfCards.ts";
 
 const props = defineProps<{ showFlip: boolean }>()
+const emit = defineEmits(['cardDraw', 'reset'])
 
 const {initDeck, deckId, drawCard, remaining} = useDeckOfCards()
 
@@ -14,8 +15,14 @@ const cardShow = ref(false)
 
 const currentCard: Ref<CardType|null> = ref()
 
+const resetDeck = async () => {
+  await initDeck()
+  emit('reset')
+}
+
 onMounted(async () => {
   await initDeck()
+
 })
 
 const flipCard = (v: boolean) => {
@@ -43,7 +50,7 @@ const flipCard = (v: boolean) => {
       </div>
     </div>
     <div>{{remaining}} cards remaining </div>
-    <Button style="height: 30px;" @click="initDeck">Reset Deck</Button>
+    <Button style="height: 30px;" @click="resetDeck">Reset Deck</Button>
   </div>
 </template>
 

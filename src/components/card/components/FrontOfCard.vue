@@ -8,10 +8,15 @@ defineProps<{
 </script>
 
 <template>
-  <div class="front-card-container">
-    <img style="border: 1px solid black; border-radius: 12px;"
-         src="../../../assets/blank.png" class="front-blank" alt="Card Front Blank" />
-    <h1 class="top">{{card.code}}</h1>
+  <div style="align-content: center;">
+    <div style="position: relative;">
+      <div class="front-card-container">
+  <!--    <img style="border: 1px solid black; border-radius: 12px;"-->
+  <!--         src="../../../assets/blank.png" class="front-blank" alt="Card Front Blank" />-->
+  <!--    <h1 class="top">{{card.code}}</h1>-->
+      <img :src="card.image">
+    </div>
+    </div>
   </div>
 </template>
 
