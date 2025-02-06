@@ -18,6 +18,7 @@ Run `yarn dev` to start the dev server for this app.
 Began 2/4/2025 - setup initial vite project. Added Game selection interface and proof of concept for drawing cards with API
 
 2/5/2025 - Refactored setup to use piles and show interaction of drawing cards from a pile.
+
 2/6/2025 - Document and tweaks to style
 
 
