@@ -23,10 +23,11 @@ Began 2/4/2025 - setup initial vite project. Added Game selection interface and 
 
 
 ### Refactorings
-
 * Make API calls more resilient by adding param validation and error handling.
-* Save the pile information from the API directly, possibly moving into the deck or deck api composables. Then save a separate reactive or computed value for the game piles, if needed.
-* Review if it is worth saving the img srcs so they do not need to be fetched repeatedly.
+* Refactor the game state: 
+  * Consider saving the pile information from the API directly, possibly moving into the deck or deck api composables. Then save a separate reactive or computed value for the game piles, if needed.
+  * Consider moving/breaking down the game logic for the RandomDraw component into composable(s). Possibly do this after a second game is built to better see patterns.
+* Review if it is worth saving the img src links so they do not need to be fetched repeatedly.
 * Fix styling of the game board (currently does not play nice with different screen sizes)
 
 
