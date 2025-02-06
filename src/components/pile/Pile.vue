@@ -1,26 +1,62 @@
 <script setup lang="ts">
+import Card from "../card/Card.vue";
+import type {CardType} from "../../composables/deck.ts";
+import {MODE_DRAW, MODE_FACE_UP, MODE_HAND} from "./constants.ts";
+import {computed} from 'vue';
 
-import FrontOfCard from "../card/components/FrontOfCard.vue";
-import type {CardType} from "../deck/composables/deckOfCards.ts";
+const props = defineProps<{
+  pile: Array<CardType>,
+  mode: MODE_DRAW|MODE_FACE_UP|MODE_HAND
+}>()
 
-const props = defineProps<{ card: CardType|undefined|null }>()
+const lastCard = computed(() => props.pile.length > 0 ? props.pile[props.pile.length - 1] : null)
+
+const emit = defineEmits(['click'])
+const onClick = (idx: number) => {
+  emit('click', idx)
+}
 
 </script>
 
 <template>
-  <div class="pile-of-cards" v-if="card">
-    <div class="card-pil">
-      <FrontOfCard :card="card"></FrontOfCard>
+
+  <div style="align-content: center;">
+    <div style="position: relative;">
+
+      <div class="pile-of-cards">
+        <div class="card-pile">
+          <template v-if="mode === MODE_DRAW">
+            <Card v-if="lastCard && pile.length > 1" :allow-click="false" :face-up="false" :card="null" class="hidden-cards"/>
+            <Card v-if="lastCard" :allow-click="true" :face-up="false" :card="lastCard" @click="onClick(pile.length - 1)" class="top-card"></Card>
+          </template>
+          <template v-else-if="mode === MODE_FACE_UP">
+            <Card v-if="lastCard" :allow-click="true" :face-up="true" :card="lastCard" @click="onClick(pile.length - 1)"></Card>
+          </template>
+          <template v-else-if="mode === MODE_HAND">
+            <template v-for="(card, idx) in pile.reverse">
+              <Card :allow-click="true" :face-up="true" :card="card" @click="onClick(idx)"></Card>
+            </template>
+          </template>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .pile-of-cards {
-  background: black;
+  height: 355px;
+  width: 280px;
+
   margin-top: 10px;
-  .card-pile {
+  .hidden-cards {
+    position: absolute;
+  }
+  .top-card {
+    cursor: pointer;
+    position: absolute;
+    left: 15px;
+    top: 5px;
   }
 }
-
 </style>

@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import type {CardType} from "../deck/composables/deckOfCards.ts";
+import type {CardType} from "../../composables/deck.ts";
 import BackOfCard from "./components/BackOfCard.vue";
 import FrontOfCard from "./components/FrontOfCard.vue";
 
 const props = defineProps<{
-  allowToggle: boolean,
-  showCard: boolean,
+  allowClick: boolean,
+  faceUp: boolean,
   card: CardType|null|undefined,
 }>()
 
-const emits = defineEmits(['update:showCard'])
+const emits = defineEmits(['click'])
 
-const toggleCard = () => {
-  emits('update:showCard', !props.showCard)
+const onClick = () => {
+  if (props.allowClick) emits('click', !props.faceUp)
 }
 </script>
 
 <template>
-  <div class="top-card">
-    <FrontOfCard v-if="showCard && card" @click="toggleCard" :card="card"/>
-    <BackOfCard v-else @click="toggleCard"/>
+  <div class="card">
+    <FrontOfCard v-if="faceUp && card" @click="onClick" :card="card"/>
+    <BackOfCard v-else @click="onClick"/>
   </div>
 
 </template>

@@ -1,10 +1,14 @@
 <script setup lang="ts">
 
-import type {CardType} from "../../deck/composables/deckOfCards.ts";
+import type {CardType} from "../../../composables/deck.ts";
+import {computed} from 'vue';
 
-defineProps<{
+const props = defineProps<{
   card: CardType,
 }>()
+
+const src = computed(() => props.card.image)
+
 </script>
 
 <template>
@@ -14,7 +18,7 @@ defineProps<{
   <!--    <img style="border: 1px solid black; border-radius: 12px;"-->
   <!--         src="../../../assets/blank.png" class="front-blank" alt="Card Front Blank" />-->
   <!--    <h1 class="top">{{card.code}}</h1>-->
-      <img :src="card.image">
+      <img :src="src">
     </div>
     </div>
   </div>

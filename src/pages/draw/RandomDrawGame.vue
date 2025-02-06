@@ -1,26 +1,89 @@
 <script setup lang="ts">
-import type {CardType} from "../../components/deck/composables/deckOfCards.ts";
-import {ref} from 'vue';
-import Deck from "../../components/deck/Deck.vue";
+import {type CardType, type DeckType, useDeck} from "../../composables/deck.ts";
+import type {Ref} from 'vue';
+import Button from 'primevue/button'
+import {onBeforeMount, reactive} from 'vue';
+import {MODE_DRAW, MODE_FACE_UP} from "../../components/pile/constants.ts";
 import Pile from "../../components/pile/Pile.vue";
 
-// interface RandomDrawGameState {
-//   // deckId: string|null,
-// }
-//
-// const gameState = <RandomDrawGameState>reactive({
-//   // deckId: null,
-// })
-const currentCard: Ref<CardType|null> = ref()
+interface RandomDrawGameState {
+  deck: Ref<DeckType|null>|null,
+  drawPile: Array<CardType>,
+  drawPileName: string,
+  discardPile: Array<CardType>,
+  discardPileName: string,
+}
+
+const gameState = <RandomDrawGameState> reactive({
+  deck: null,
+  drawPile: [],
+  drawPileName: 'draw',
+  discardPile: [],
+  discardPileName: 'discard',
+})
+
+const {
+  deck,
+  initDeck,
+  drawCard,
+  drawCardFromPile,
+  addToPile,
+} = useDeck()
+
+const addToDrawPile = async (cards: Array<CardType>) => {
+  await addToPile(gameState.drawPileName, cards)
+  cards.map(c => {
+    gameState.drawPile.push(c)
+  })
+}
+const addToDiscardPile = async (cards: Array<CardType>) => {
+  await addToPile(gameState.discardPileName, cards)
+  cards.map(c => {
+    gameState.discardPile.push(c)
+  })
+}
+const removeCardFromDrawPile = async () => {
+  let cards = await drawCardFromPile(gameState.drawPileName, 1)
+  gameState.drawPile.splice(-1, 1)
+  return cards
+}
+
+const initializeGame = async () => {
+  gameState.drawPile.splice(0)
+  gameState.drawPile = []
+  gameState.discardPile = []
+  await initDeck() // new deck
+
+  // Setup Draw Pile with all 52 cards
+  gameState.deck = deck
+  let cards = await drawCard(52)
+  await addToDrawPile(cards)
+  await addToDiscardPile([])
+}
+
+onBeforeMount(async () => {
+  await initializeGame()
+})
+
+const drawNext = async () => {
+  let cards =  await removeCardFromDrawPile()
+  await addToDiscardPile(cards)
+}
+
+const resetDeck = async () => {
+  initializeGame()
+}
 
 </script>
 
 <template>
   <div class="random-draw-container">
     <div style="display: flex;">
-      <Deck :show-flip="false" @cardDraw="currentCard =$event" @reset="currentCard = null"></Deck>
-      <Pile :card="currentCard"/>
+      <Pile :mode="MODE_DRAW" :pile="gameState.drawPile" @click="drawNext"/>
+      <Pile :mode="MODE_FACE_UP" :pile="gameState.discardPile"/>
     </div>
+    <div>{{gameState.drawPile.length}} cards remaining </div>
+    <Button style="height: 30px;" @click="resetDeck">New Deck</Button>
   </div>
 </template>
 

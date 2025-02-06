@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import {useDeckOfCards} from "../../deck/composables/deckOfCards.ts";
 
-const {imageSrc} = useDeckOfCards()
+import {useDeckApi} from "../../../composables/deckApi.ts";
+
+const {cardBackSrc} = useDeckApi()
 
 </script>
 
 <template>
-  <img :src="imageSrc"/>
+  <img :src="cardBackSrc" alt="back-of-card"/>
 </template>
 
 <style scoped>
