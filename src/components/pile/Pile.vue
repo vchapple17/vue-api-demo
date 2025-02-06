@@ -30,7 +30,7 @@ const onClick = (idx: number) => {
             <Card v-if="lastCard" :allow-click="true" :face-up="false" :card="lastCard" @click="onClick(pile.length - 1)" class="top-card"></Card>
           </template>
           <template v-else-if="mode === MODE_FACE_UP">
-            <Card v-if="lastCard" :allow-click="true" :face-up="true" :card="lastCard" @click="onClick(pile.length - 1)"></Card>
+            <Card v-if="lastCard" :allow-click="true" :face-up="true" :card="lastCard" @click="onClick(pile.length - 1)" class="top-card"></Card>
           </template>
           <template v-else-if="mode === MODE_HAND">
             <template v-for="(card, idx) in pile.reverse">
@@ -48,7 +48,9 @@ const onClick = (idx: number) => {
   height: 355px;
   width: 280px;
 
-  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-top: 0;
+
   .hidden-cards {
     position: absolute;
   }

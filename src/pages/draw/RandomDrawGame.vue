@@ -32,20 +32,35 @@ const {
 
 const addToDrawPile = async (cards: Array<CardType>) => {
   await addToPile(gameState.drawPileName, cards)
-  cards.map(c => {
-    gameState.drawPile.push(c)
-  })
+  cards.every(c => gameState.drawPile.push(c))
 }
 const addToDiscardPile = async (cards: Array<CardType>) => {
   await addToPile(gameState.discardPileName, cards)
-  cards.map(c => {
-    gameState.discardPile.push(c)
-  })
+  cards.every(c => gameState.discardPile.push(c))
 }
 const removeCardFromDrawPile = async () => {
   let cards = await drawCardFromPile(gameState.drawPileName, 1)
   gameState.drawPile.splice(-1, 1)
   return cards
+}
+const removeCardFromDiscardPile = async () => {
+  let cards = await drawCardFromPile(gameState.discardPileName, 1)
+  gameState.discardPile.splice(-1, 1)
+  return cards
+}
+
+const drawNext = async () => {
+  let cards =  await removeCardFromDrawPile()
+  await addToDiscardPile(cards)
+}
+
+const undoDraw = async () => {
+  let cards = await removeCardFromDiscardPile()
+  await addToDrawPile(cards)
+}
+
+const resetDeck = async () => {
+  await initializeGame()
 }
 
 const initializeGame = async () => {
@@ -65,25 +80,23 @@ onBeforeMount(async () => {
   await initializeGame()
 })
 
-const drawNext = async () => {
-  let cards =  await removeCardFromDrawPile()
-  await addToDiscardPile(cards)
-}
-
-const resetDeck = async () => {
-  initializeGame()
-}
-
 </script>
 
 <template>
   <div class="random-draw-container">
     <div style="display: flex; justify-content: center">
-      <Pile :mode="MODE_DRAW" :pile="gameState.drawPile" @click="drawNext"/>
-      <Pile :mode="MODE_FACE_UP" :pile="gameState.discardPile"/>
+      <div style="display: block">
+        <h3 style="margin-bottom: 0">Draw Pile</h3>
+        <Pile :mode="MODE_DRAW" :pile="gameState.drawPile" @click="drawNext"/>
+      </div>
+      <div style="display: block">
+        <h3 style="margin-bottom: 0">Discard Pile</h3>
+      <Pile :mode="MODE_FACE_UP" :pile="gameState.discardPile" @click="undoDraw"/>
+      </div>
     </div>
     <div>{{gameState.drawPile.length}} cards remaining </div>
     <Button style="height: 30px;" @click="resetDeck">New Deal</Button>
+    <h3></h3>
   </div>
 </template>
 
