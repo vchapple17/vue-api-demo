@@ -46,13 +46,14 @@ const onClick = (idx: number) => {
 <style scoped>
 .pile-of-cards {
   height: 355px;
-  width: 280px;
+  width: 310px;
 
   margin-bottom: 20px;
   margin-top: 0;
 
   .hidden-cards {
     position: absolute;
+    left: 0;
   }
   .top-card {
     cursor: pointer;

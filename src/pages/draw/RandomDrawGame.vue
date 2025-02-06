@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {type CardType, type DeckType, useDeck} from "../../composables/deck.ts";
-import type {Ref} from 'vue';
+import {type Ref, ref} from 'vue';
 import Button from 'primevue/button'
 import {onBeforeMount, reactive} from 'vue';
 import {MODE_DRAW, MODE_FACE_UP} from "../../components/pile/constants.ts";
@@ -30,6 +30,8 @@ const {
   addToPile,
 } = useDeck()
 
+const movingCard = ref(false)
+
 const addToDrawPile = async (cards: Array<CardType>) => {
   await addToPile(gameState.drawPileName, cards)
   cards.every(c => gameState.drawPile.push(c))
@@ -50,30 +52,43 @@ const removeCardFromDiscardPile = async () => {
 }
 
 const drawNext = async () => {
-  let cards =  await removeCardFromDrawPile()
-  await addToDiscardPile(cards)
+  if (movingCard.value !== true) {
+    movingCard.value = true
+    let cards = await removeCardFromDrawPile()
+    await addToDiscardPile(cards)
+    movingCard.value = false
+  }
 }
 
 const undoDraw = async () => {
-  let cards = await removeCardFromDiscardPile()
-  await addToDrawPile(cards)
+  if (movingCard.value !== true) {
+    movingCard.value = true
+    let cards = await removeCardFromDiscardPile()
+    await addToDrawPile(cards)
+    movingCard.value = false
+  }
 }
 
 const resetDeck = async () => {
+  // debounce in the future
   await initializeGame()
 }
 
 const initializeGame = async () => {
-  gameState.drawPile.splice(0)
-  gameState.drawPile = []
-  gameState.discardPile = []
-  await initDeck() // new deck
+  if (movingCard.value !== true) {
+    movingCard.value = true
+    gameState.drawPile.splice(0)
+    gameState.drawPile = []
+    gameState.discardPile = []
+    await initDeck() // new deck
 
-  // Setup Draw Pile with all 52 cards
-  gameState.deck = deck
-  let cards = await drawCard(52)
-  await addToDrawPile(cards)
-  await addToDiscardPile([])
+    // Setup Draw Pile with all 52 cards
+    gameState.deck = deck
+    let cards = await drawCard(52)
+    await addToDrawPile(cards)
+    await addToDiscardPile([])
+    movingCard.value = false
+  }
 }
 
 onBeforeMount(async () => {
@@ -91,11 +106,11 @@ onBeforeMount(async () => {
       </div>
       <div style="display: block">
         <h3 style="margin-bottom: 0">Discard Pile</h3>
-      <Pile :mode="MODE_FACE_UP" :pile="gameState.discardPile" @click="undoDraw"/>
+        <Pile :mode="MODE_FACE_UP" :pile="gameState.discardPile" @click="undoDraw"/>
       </div>
     </div>
     <div>{{gameState.drawPile.length}} cards remaining </div>
-    <Button style="height: 30px;" @click="resetDeck">New Deal</Button>
+    <Button style="height: 30px;" @click="resetDeck" :disabled="movingCard">New Deal</Button>
     <h3></h3>
   </div>
 </template>
@@ -104,8 +119,6 @@ onBeforeMount(async () => {
 .random-draw-container {
   margin-top: 20px;
   margin-bottom: 20px;
-  border: 2px solid black;
-  box-shadow: 2px 2px 2px black;
 }
 .random-draw-container {
   @media (max-width: 320px) {

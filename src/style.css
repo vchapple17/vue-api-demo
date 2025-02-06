@@ -61,6 +61,7 @@ button:focus-visible {
 
 #app {
   width: 100%;
+  height: 800px;
   text-align: center;
 }
 
@@ -80,7 +81,7 @@ button:focus-visible {
 
 /** Created by VC **/
 
-#app {
+body, #app {
   background-color: #007733;
   color: #efefef;
 }
