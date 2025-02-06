@@ -28,17 +28,19 @@ const {
   drawCard,
   drawCardFromPile,
   addToPile,
+  lastApiResponse,
+  lastApiCall,
 } = useDeck()
 
 const movingCard = ref(false)
 
 const addToDrawPile = async (cards: Array<CardType>) => {
   await addToPile(gameState.drawPileName, cards)
-  cards.every(c => gameState.drawPile.push(c))
+  cards?.every(c => gameState.drawPile.push(c))
 }
 const addToDiscardPile = async (cards: Array<CardType>) => {
   await addToPile(gameState.discardPileName, cards)
-  cards.every(c => gameState.discardPile.push(c))
+  cards?.every(c => gameState.discardPile.push(c))
 }
 const removeCardFromDrawPile = async () => {
   let cards = await drawCardFromPile(gameState.drawPileName, 1)
@@ -80,14 +82,18 @@ const initializeGame = async () => {
     gameState.drawPile.splice(0)
     gameState.drawPile = []
     gameState.discardPile = []
-    await initDeck() // new deck
+    try {
+      await initDeck() // new deck
 
-    // Setup Draw Pile with all 52 cards
-    gameState.deck = deck
-    let cards = await drawCard(52)
-    await addToDrawPile(cards)
-    await addToDiscardPile([])
-    movingCard.value = false
+      // Setup Draw Pile with all 52 cards
+      gameState.deck = deck
+      let cards = await drawCard(52)
+      await addToDrawPile(cards)
+      await addToDiscardPile([])
+      movingCard.value = false
+    } catch(e) {
+      console.error(e)
+    }
   }
 }
 
@@ -99,19 +105,47 @@ onBeforeMount(async () => {
 
 <template>
   <div class="random-draw-container">
+
     <div style="display: flex; justify-content: center">
-      <div style="display: block">
-        <h3 style="margin-bottom: 0">Draw Pile</h3>
-        <Pile :mode="MODE_DRAW" :pile="gameState.drawPile" @click="drawNext"/>
+      <div style="display: block; width: 520px; text-align: start">
+        <h3 style="margin-bottom: 0">Directions</h3>
+        <ul>
+          <li>Click on the draw pile to move the top card to a discard pile.</li>
+          <li>Click on the discard pile to move the top card back to a draw pile.</li>
+          <li>Click the "New Deal" button to get a new shuffled deck.</li>
+        </ul>
+
+        <h3 style="margin-bottom: 0">API Interactions</h3>
+        <p>There are 4 API calls utilized in this mini-app to create the draw and discard piles</p>
+        <ul>
+          <li><strong>New Deck</strong>: Fetches a new deck from the API.</li>
+          <li><strong>Draw Card From Deck</strong>: Fetches card(s) from this deck. This app draws all 52 cards, and places into the Draw Pile.</li>
+          <li><strong>Draw Card From Pile</strong>: Moves a drawn card to a named pile ('draw' or 'discard')</li>
+          <li><strong>Remove Card From Pile</strong>: Removes a drawn card from a named pile ('draw' or 'discard')</li>
+        </ul>
       </div>
-      <div style="display: block">
-        <h3 style="margin-bottom: 0">Discard Pile</h3>
-        <Pile :mode="MODE_FACE_UP" :pile="gameState.discardPile" @click="undoDraw"/>
+
+      <div style="display: block; justify-content: center;">
+        <div style="display: flex; justify-content: center;">
+          <div style="display: block">
+            <h3 style="margin-bottom: 0">Draw Pile</h3>
+            <Pile :mode="MODE_DRAW" :pile="gameState.drawPile" @click="drawNext"/>
+          </div>
+          <div style="display: block">
+            <h3 style="margin-bottom: 0">Discard Pile</h3>
+            <Pile :mode="MODE_FACE_UP" :pile="gameState.discardPile" @click="undoDraw"/>
+          </div>
+        </div>
+        <div>{{gameState.drawPile.length}} cards remaining </div>
+        <Button style="height: 30px;" @click="resetDeck" :disabled="movingCard">New Deal</Button>
       </div>
     </div>
-    <div>{{gameState.drawPile.length}} cards remaining </div>
-    <Button style="height: 30px;" @click="resetDeck" :disabled="movingCard">New Deal</Button>
-    <h3></h3>
+  </div>
+  <div class="game-explanation">
+    <h3>Last Call and Parameters</h3>
+    {{lastApiCall}}
+    <h4>Last Response</h4>
+    {{ lastApiResponse }}
   </div>
 </template>
 
@@ -120,18 +154,12 @@ onBeforeMount(async () => {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-.random-draw-container {
-  @media (max-width: 320px) {
-    width: 100vw;
-  }
-  @media (min-width: 321px) and (max-width: 800px) {
-    width: 90vw;
-  }
-  @media (min-width: 801px) and (max-width: 1200px) {
-    width: 900px;
-  }
-  @media (min-width: 1201px) {
-    width: 1200px;
-  }
+
+.game-explanation {
+  padding: 20px;
+  display: block;
+  text-align: start;
+  width: 100%;
+  background-color: gray; color: black;
 }
 </style>

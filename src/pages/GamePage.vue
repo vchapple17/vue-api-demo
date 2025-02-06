@@ -25,7 +25,7 @@ const selectedComponent = computed(() => {
 <template>
   <div class="game-container">
     <div class="heading">
-      <h2>Select a card game:</h2>
+      <h3>Select a card game:</h3>
       <Select
           v-model="selectedGame"
           class="game-select"
@@ -45,7 +45,7 @@ const selectedComponent = computed(() => {
 <style scoped>
 .heading {
   position: relative;
-  height: 110px;
+  height: 100px;
 }
 h2 {
   margin-top: 0;
@@ -57,7 +57,7 @@ h2 {
   height: calc(100% - 20vh);
 }
 .playing-surface {
-  display: flex;
+  display: block;
   height: calc(100vh - 110px);
   justify-content: center;
 }

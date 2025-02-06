@@ -22,7 +22,9 @@ export function useDeck() {
         getCard,
         getFromPile,
         postToPile,
-        cardBackSrc
+        cardBackSrc,
+        lastApiCall,
+        lastApiResponse,
     } = useDeckApi()
 
     const deck: Ref<DeckType|null> = ref(null)
@@ -80,5 +82,7 @@ export function useDeck() {
         remaining,
         cardBackSrc,
         addToPile,
+        lastApiCall,
+        lastApiResponse,
     }
 }
