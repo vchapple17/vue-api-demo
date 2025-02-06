@@ -78,12 +78,12 @@ const resetDeck = async () => {
 
 <template>
   <div class="random-draw-container">
-    <div style="display: flex;">
+    <div style="display: flex; justify-content: center">
       <Pile :mode="MODE_DRAW" :pile="gameState.drawPile" @click="drawNext"/>
       <Pile :mode="MODE_FACE_UP" :pile="gameState.discardPile"/>
     </div>
     <div>{{gameState.drawPile.length}} cards remaining </div>
-    <Button style="height: 30px;" @click="resetDeck">New Deck</Button>
+    <Button style="height: 30px;" @click="resetDeck">New Deal</Button>
   </div>
 </template>
 
