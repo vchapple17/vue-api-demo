@@ -36,3 +36,5 @@ Began 2/4/2025 - setup initial vite project. Added Game selection interface and 
 * Add a War game to flip cards and move the winning cards to the bottom of the winner's pile.
 * Add Drag and Drop functionality for cards
 
+
+![Desktop View](public/vue-api-demo-screenshot.png "Desktop View")
