@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import Card from "../card/Card.vue";
 import type {CardType} from "../../composables/deck.ts";
-import {MODE_DRAW, MODE_FACE_UP, MODE_HAND} from "./constants.ts";
+import type {MODE_DRAW, MODE_FACE_UP, MODE_HAND} from "./constants.ts";
+import {DRAW, FACE_UP, HAND} from "./constants.ts";
 import {computed} from 'vue';
 
 const props = defineProps<{
@@ -25,14 +26,14 @@ const onClick = (idx: number) => {
 
       <div class="pile-of-cards">
         <div class="card-pile">
-          <template v-if="mode === MODE_DRAW">
+          <template v-if="mode === DRAW">
             <Card v-if="lastCard && pile.length > 1" :allow-click="false" :face-up="false" :card="null" class="hidden-cards"/>
             <Card v-if="lastCard" :allow-click="true" :face-up="false" :card="lastCard" @click="onClick(pile.length - 1)" class="top-card"></Card>
           </template>
-          <template v-else-if="mode === MODE_FACE_UP">
+          <template v-else-if="mode === FACE_UP">
             <Card v-if="lastCard" :allow-click="true" :face-up="true" :card="lastCard" @click="onClick(pile.length - 1)" class="top-card"></Card>
           </template>
-          <template v-else-if="mode === MODE_HAND">
+          <template v-else-if="mode === HAND">
             <template v-for="(card, idx) in pile.reverse">
               <Card :allow-click="true" :face-up="true" :card="card" @click="onClick(idx)"></Card>
             </template>

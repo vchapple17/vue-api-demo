@@ -3,7 +3,7 @@ import {type CardType, type DeckType, useDeck} from "../../composables/deck.ts";
 import {type Ref, ref} from 'vue';
 import Button from 'primevue/button'
 import {onBeforeMount, reactive} from 'vue';
-import {MODE_DRAW, MODE_FACE_UP} from "../../components/pile/constants.ts";
+import {DRAW, FACE_UP} from "../../components/pile/constants.ts";
 import Pile from "../../components/pile/Pile.vue";
 
 interface RandomDrawGameState {
@@ -129,11 +129,11 @@ onBeforeMount(async () => {
         <div style="display: flex; justify-content: center;">
           <div style="display: block">
             <h3 style="margin-bottom: 0">Draw Pile</h3>
-            <Pile :mode="MODE_DRAW" :pile="gameState.drawPile" @click="drawNext"/>
+            <Pile :mode="DRAW" :pile="gameState.drawPile" @click="drawNext"/>
           </div>
           <div style="display: block">
             <h3 style="margin-bottom: 0">Discard Pile</h3>
-            <Pile :mode="MODE_FACE_UP" :pile="gameState.discardPile" @click="undoDraw"/>
+            <Pile :mode="FACE_UP" :pile="gameState.discardPile" @click="undoDraw"/>
           </div>
         </div>
         <div>{{gameState.drawPile.length}} cards remaining </div>

@@ -1,0 +1,1 @@
+rsync -rvzP --filter="merge ./transfer_filter.txt" ../ username@domain:/vue-api-demo --dry-run
